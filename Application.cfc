@@ -1,6 +1,6 @@
 component {
 
-    this.name = "User Details Excel";
+    this.name = "ExcelDb";
     this.datasource = "testdbdsn";    
     function onError(Exception,EventName){
         writeOutput('<center><h1>An error occurred</h1>
