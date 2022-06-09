@@ -4,25 +4,24 @@
  
  <cfset local.thisPath=expandPath('.')& '/' >
             <cfset local.f_dir=GetDirectoryFromPath(local.thisPath)>
-            <cffile action="upload" destination="#local.f_dir#" filefield="FileToUpload" result="upload" nameconflict="makeunique">
+            <cffile action="upload" destination="#local.f_dir#" filefield="fileInput" result="upload" nameconflict="makeunique">
+         
             <cfif upload.fileWasSaved>
-                <cfset local.myfile = upload.serverDirectory & "/" & upload.serverFile>
+
+          <cfset local.myfile = upload.serverDirectory & "/" & upload.serverFile>
                 <cfif isSpreadsheetFile(local.myfile)>
-
-
-
-<cfspreadsheet action="read" src="#ExpandPath( './data.xlsx' )#" query="importdata" headerrow="1" />
- 
-<!--- <cfset failedimports = "" /> --->
+                 <cfspreadsheet action="read" src="#local.myfile#" query="importdata" headerrow="1" />
+ <cfdump var=#importdata#/>
+ <cfset failedimports = "" /> 
  <cfset rdata = structNew() />
  
 <cfloop query="importdata" startrow="2">
  <cfif !Len( product_title ) || !Len( product_code ) || !IsNumeric( product_price )>
-    <cfset rdata["failedimports"] = ListAppend( failedimports, product_code ) />
+    <cfset  ListAppend( failedimports , product_code ) />
   <cfelse>
     <cftry>
       <cfquery datasource="mydatasource" result="foobar">
-        REPLACE INTO users
+        REPLACE INTO products
         (
           product_title
           , product_code
@@ -37,23 +36,23 @@
       </cfquery>
  
       <cfcatch type="any">
-        <cfset rdata["failedimports"] = ListAppend( failedimports, product_code) />
+        <cfset  ListAppend( failedimports, product_code) />
       </cfcatch>
     </cftry>
   </cfif>
 </cfloop>
  
 
-  <h1>Failed Imports</h1>
+
  
-  <cfif ListLen( failedimports )>
-    <p>#ListLen( failedimports )# products could not be imported.</p>
- 
-    <cfloop list="#failedimports#" index="index">
+  <cfif ListLen( failedimports)>
+  
+ <cfset rdata['msg']=ListLen( failedimports )&"products could not be imported">
+   <!--- <cfloop list="#rdata["failedimports"]#" index="index">
       #index#<br />
-    </cfloop>
+    </cfloop>--->
   <cfelse>
-    <p>No products failed to be imported.</p>
+    <cfset rdata['msg']="no products missed to import">
   </cfif>
 
 
@@ -64,13 +63,13 @@
             <cfelse>
                 <cfset rdata["errors"] = "The file was not uploaded.Please choose a file">	
             </cfif>
-            </cfoutput>
+       <cfset rdata["failedimports"]=failedimports/>
             <cfreturn rdata/>
 	</cffunction>
    <cffunction  name="getAllProductData" returntype ="query" output="false">
         <cfquery name="getAllProducts">
             SELECT * from Products;
         </cfquery>
-        <cfreturn getAllUsers>
+        <cfreturn getAllProducts>
     </cffunction>
 </cfcomponent>
