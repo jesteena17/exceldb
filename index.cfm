@@ -3,10 +3,10 @@
     <cfinvoke component="test"  method="uploadfile" returnvariable="resultedXlsxData" >
       <cfinvokeargument  name="formValue"  value="#form#">
     </cfinvoke>
-    <cfdump var=#resultedXlsxData#/><cfabort/>
+    <cfdump var=#resultedXlsxData#/>
     <cfset showMessage = true>
 </cfif>
-<cfinvoke component="test"  method="getAllUserData" returnvariable="allUsers" >
+<cfinvoke component="test"  method="getAllProductData" returnvariable="allUsers" >
 </cfinvoke>
 <html lang="en">
 <head>
