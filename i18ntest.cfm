@@ -8,7 +8,7 @@
 <cfdump var=#javarb#/>
   
  <cfset SetLocale("hi_IN")/>  Message in #GetLocale()#
-  <cfset bundle = javarb.getBundle("MessageBundle")/>
-  Message in #GetLocale()# #bundle.getString("greeting")#  
+  <cfset ResourceManager.getInstance().getResourceBundle("MessageBundle")/>
+  Message in #GetLocale()# #ResourceManager.getInstance().getString()("greeting")#  
 
     </cfoutput>
